@@ -26,8 +26,61 @@
 
 #include "stdafx.h"
 
-int main()
+struct IObserver;
+struct IObservable;
+
+
+struct ISubscriber
 {
-    return 0;
+	virtual ~ISubscriber() {}
+	virtual void Id() const = 0;
+};
+
+
+TEST(ISubscriber, has_virtual_destructor)
+{
+	EXPECT_TRUE(std::has_virtual_destructor<ISubscriber>::value);
 }
 
+
+TEST(ISubscriber, is_abstract)
+{
+	EXPECT_TRUE(std::is_abstract<ISubscriber>::value);
+}
+
+
+
+template <typename T, typename ... Args>
+struct Publisher : public Publisher<Args...>
+{
+};
+
+template <typename T>
+struct Publisher<T>
+{
+};
+
+
+struct StopEvent;
+struct ConfigurationChangedEvent;
+
+
+TEST(Publisher, is_constructible_one_template_arg)
+{
+	typedef Publisher<StopEvent> Pub;
+	EXPECT_TRUE(std::is_constructible<Pub>::value);
+}
+
+TEST(Publisher, is_constructible_two_template_args)
+{
+	typedef Publisher<StopEvent, ConfigurationChangedEvent> Pub2;
+	EXPECT_TRUE(std::is_constructible<Pub2>::value);
+}
+
+
+
+int main(int argc, char **argv)
+{
+	::testing::InitGoogleTest(&argc, argv);
+	return RUN_ALL_TESTS();
+}

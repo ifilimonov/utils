@@ -33,9 +33,6 @@
 
 #include "targetver.h"
 
-#include <stdio.h>
-#include <tchar.h>
-
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
